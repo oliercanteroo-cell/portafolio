@@ -254,19 +254,43 @@
     f.addEventListener("input", () => { if (f.classList.contains("invalid")) checkField(f); });
   });
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault(); // evita que el navegador recargue la página al enviar
-    // Revisamos todos los campos y .every(Boolean) comprueba que TODOS dieron true
+    const ACCESS_KEY = "2d22701b-41b2-46d0-a740-6b4240f83945";
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
     const ok = $$("input, textarea", form).map(checkField).every(Boolean);
-    if (ok) {
-      status.dataset.key = "form.ok";
-      status.textContent = t("form.ok");
-      form.reset(); // vacía los campos
-      // (Aquí es donde en la fase final conectaremos el envío real por correo)
-    } else {
+    if (!ok) {
       status.textContent = "";
       delete status.dataset.key;
+      return;                                   // si hay errores, no enviamos nada
     }
+
+    const btn = $("button[type=submit]", form);
+    btn.disabled = true;                        // evita dobles clics
+    status.dataset.key = "form.sending";
+    status.textContent = t("form.sending");
+
+    const data = new FormData(form);
+    data.append("access_key", ACCESS_KEY);
+    data.append("subject", "Nuevo mensaje desde mi portafolio");
+    data.append("from_name", "Portafolio");
+
+    let key;
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: data
+      });
+      const json = await res.json();            // Web3Forms responde con { success: true/false }
+      if (res.ok && json.success) { key = "form.ok"; form.reset(); }
+      else key = "form.error";
+    } catch {
+      key = "form.error";                       // por ejemplo, sin internet
+    }
+
+    status.dataset.key = key;
+    status.textContent = t(key);
+    btn.disabled = false;
   });
 
   /* ---------- 13. Año del footer ---------- */

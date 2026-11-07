@@ -42,7 +42,9 @@ const I18N = {
     "form.required": "Este campo es obligatorio.",
     "form.email": "Escribe un correo válido.",
     "form.min": "El mensaje debe tener al menos 10 caracteres.",
-    "form.ok": "¡Mensaje validado! (el envío real se conecta en la fase final)",
+    "form.sending": "Enviando...",
+    "form.ok": "¡Mensaje enviado! Te responderé pronto.",
+    "form.error": "No se pudo enviar. Inténtalo de nuevo o escríbeme por correo.",
 
     "footer.rights": "Todos los derechos reservados."
   },
@@ -76,7 +78,9 @@ const I18N = {
     "form.required": "This field is required.",
     "form.email": "Enter a valid email.",
     "form.min": "The message must be at least 10 characters long.",
-    "form.ok": "Message validated! (real sending gets connected in the final phase)",
+    "form.sending": "Sending...",
+    "form.ok": "Message sent! I'll get back to you soon.",
+    "form.error": "Could not send. Please try again or email me directly.",
 
     "footer.rights": "All rights reserved."
   }
