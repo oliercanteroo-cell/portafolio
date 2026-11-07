@@ -1,0 +1,95 @@
+/* =====================================================================
+   base.css
+   Aquí va lo "de fondo" que usa toda la página:
+   variables de color, reset, tipografía y reglas generales.
+   ===================================================================== */
+
+   /* ===== VARIABLES =====
+   :root es el elemento raíz (<html>). Lo que se define aquí lo pudemos usar
+   en cualquier parte con var(--nombre).
+   Ventaja: si quiero cambiar el amarillo, lo cambias UNA vez aquí
+   y se actualiza en toda la página. */
+:root {
+    --bg: #0a0a0a; /* fondo principal: casi negro */
+    --bg-alt: #101010; /* fondo de las secciones alternas */
+    --surface: #161616; /* fondo de tarjetas y cajas */
+    --border: #262626; /* color de los bordes */
+    --text: #f2f2f2; /* texto principal (blanco suave) */
+    --muted: #9a9a9a; /* texto secundario (gris) */
+    --accent: #ffd400; /* EL AMARILLO. */
+    --accent-soft: rgba(255, 212, 0, 0.12); /* amarillo muy transparente (fondos suaves) */
+
+    --font-body: "Inter", sustem-ui, sans-serif; /* fuente de textos */
+    --font-mono: "JetBrains Mono", ui-monospace, monospace; /* fuente tipo código */
+
+    --radius: 12px; /* redondeo de esquinas */
+    --container: 1100px; /* ancho máximo del contenido */
+    --nav-h: 68px; /* altura del navbar (la usamos en varios lugares) */
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1) /* curva de animación suave */
+}
+
+/* ===== RESET =====
+   Los navegadores traen márgenes y estilos por defecto distintos.
+   Aquí los quitamos para partir de cero. */
+*, *::before, *::after {
+    box-sizing: border-box; /* el padding y borde NO agrandan el elemento: más fácil calcular tamaños */
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth; /* al hacer clic en un ancla, baja deslizándose */
+    scroll-padding-top: var(--nav-h); /* al bajar, deja espacio para que el navbar no tape el título */
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    /* clamp(mínimo, ideal, máximo): el tamaño crece con la pantalla pero con límites */
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
+    line-height: 1.7; /* espacio entre líneas: más legible */
+    -webkit-font-smoothing: antialiased; /* letras más nítidas en Mac/iOS */
+}
+
+img { max-width: 100%; display: block; } /* las imágenes nunca se salen de su contenedor */
+a { color: inherit; text-decoration:none; } /* los enlaces heredan el color y sin subrayado */
+ul, ol { list-style: none; } /* quita los puntos/números de las listas */
+button { 
+    font: inherit; color: inherit; /* los botones usan la misma fuente y color del resto */
+    background: none; border: 0; cursor: pointer;
+}
+
+/* Color del texto cuando lo seleccionas con el mouse */
+::selection {background: var(--accent); color: #000; }
+
+/* Borde amarillo cuando navegan con el teclado (Tab). Importante para accesibilidad. */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
+/* Clase de ayuda: pinta cualquier texto de amarillo */
+.accent { color: var(--accent); }
+
+/* .container: centra el contenido.
+   min(100% - 2.5rem, 1100px) = el menor entre "todo el ancho menos márgenes" y 1100px.
+   margin-inline: auto = centra horizontalmente. */
+
+.container {
+    width: min(100% - 2.5rem, var(--container));
+    margin-inline: auto;
+}
+
+/* Barra de scroll personalizada (solo funciona en Chrome/Edge/Safari) */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* Respeta a quienes tienen activada la opción "reducir movimiento" en su sistema:
+   les quitamos las animaciones. Es una buena práctica de accesibilidad. */
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation: none !important; transition: none !important; }
+}

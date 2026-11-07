@@ -1,0 +1,345 @@
+/* =====================================================================
+   layout.css
+   La ESTRUCTURA de la página: cómo se acomodan las secciones
+   (navbar, hero, grids, línea de tiempo, footer) y el diseño responsive.
+   ===================================================================== */
+
+   /* ===== NAVBAR ===== */
+   .navbar {
+    position: fixed; /* se queda pegado arriba aunque hagamos scroll */
+    inset: 0 0 auto 0; /* atajo para top:0; right:0; left:0; bottom:auto */
+    height: var(--nav-h);
+    z-index: 100; /* capa alta: siempre por encima del resto */
+    display: flex;
+    align-items: center; /* centra verticalmente lo de adentro */
+    transition: background 0.3s var(--ease), border-color 0.3s var(--ease), backdrop-filter 0.3s;
+    border-bottom: 1px solid transparent; /* borde invisible, aparece al hacer scroll */
+   }
+
+/* La clase .scrolled la agrega JavaScript cuando bajas 20px */
+.navbar.scrolled {
+    background: rgba(10, 10, 10, 10); /* negro semitransparente */
+    backdrop-filter: blur(12px); /* desenfoca lo que queda detrás (efecto vidrio) */
+    border-bottom-color: var(--border);
+}
+.navbar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* logo a la izquierda, acciones a la derecha */
+    gap: 1.5rem;
+}
+.logo {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+}
+.logo span { color: var(--accent); }
+
+.nav { display: flex; gap: 0.25rem; }
+.nav__link {
+    position: relative; /* necesario para posicionar la rayita ::after respecto al enlace */
+    padding: 0.5rem 0.85rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--muted);
+    transition: color 0.2s;
+}
+
+/* ::after crea un elemento "virtual": aquí es la rayita amarilla bajo el enlace */
+.nav__link::after {
+  content: "";                 /* obligatorio para que el ::after exista */
+  position: absolute;
+  left: 0.85rem;
+  right: 0.85rem;
+  bottom: 0.2rem;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);        /* empieza con ancho 0 (invisible) */
+  transform-origin: left;      /* crece desde la izquierda */
+  transition: transform 0.3s var(--ease);
+}
+
+/* Al pasar el mouse o cuando es la sección activa (clase .active puesta por JS) */
+.nav__link:hover,
+.nav__link.active { color: var(--text); }
+.nav__link.active::after,
+.nav__link:hover::after { transform: scaleX(1); } /* la rayita se "dibuja" completa */
+
+.navbar__actions { display: flex; align-items: center; gap: 0.75rem; }
+
+/* ===== HERO (portada) ===== */
+.hero {
+  position: relative;
+  min-height: 100svh;   /* mínimo la altura de la pantalla completa */
+  display: flex;
+  align-items: center;
+  padding: calc(var(--nav-h) + 2rem) 0 4rem; /* deja espacio para el navbar fijo */
+  overflow: hidden;     /* corta lo que se salga (el brillo del fondo) */
+  /* Fondo en capas (la primera se dibuja encima):
+     1) brillo amarillo difuminado arriba a la derecha
+     2) líneas horizontales cada 56px  3) líneas verticales cada 56px  -> cuadrícula
+     4) color negro de base */
+  background:
+    radial-gradient(600px circle at 80% 30%, rgba(255, 212, 0, 0.12), transparent 60%),
+    linear-gradient(var(--border) 1px, transparent 1px) 0 0 / 56px 56px,
+    linear-gradient(90deg, var(--border) 1px, transparent 1px) 0 0 / 56px 56px,
+    var(--bg);
+  background-blend-mode: normal, soft-light, soft-light, normal;
+}
+
+/* Degradado negro en la parte de abajo para que la cuadrícula se desvanezca */
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 160px;
+    background: linear-gradient(transparent, var(--bg));
+    pointer-events: none;  /* no bloquea los clics en lo que hay debajo */
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;                     /* por encima del degradado */
+  display: grid;
+  grid-template-columns: 1.3fr 1fr; /* 2 columnas: texto más ancho que la foto */
+  align-items: center;
+  gap: 3rem;
+}
+
+.hero__tag {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+
+.hero__name {
+  font-size: clamp(2.4rem, 1.4rem + 4.6vw, 4.6rem); /* tamaño fluido según pantalla */
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+.hero__role {
+  margin-top: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: clamp(1rem, 0.9rem + 0.6vw, 1.35rem);
+  color: var(--text);
+  min-height: 2em;  /* reserva espacio para que la página no "salte" mientras se escribe */
+}
+/* El cursor amarillo parpadeante al final del texto */
+.hero__role::after {
+  content: "";
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  margin-left: 4px;
+  vertical-align: -0.15em;
+  background: var(--accent);
+  animation: blink 1s steps(1) infinite; /* usa la animación "blink" definida abajo */
+}
+/* @keyframes define una animación: a mitad del ciclo (50%) se vuelve invisible */
+@keyframes blink { 50% { opacity: 0; } }
+
+.hero__desc {
+  margin-top: 1rem;
+  max-width: 54ch;  /* "ch" = ancho de un carácter: limita a ~54 letras por línea (más legible) */
+  color: var(--muted);
+}
+.hero__cta { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+
+.hero__media { display: grid; place-items: center; }
+.photo {
+  position: relative;
+  width: min(320px, 72vw);
+  aspect-ratio: 1;   /* siempre cuadrada */
+}
+/* El marco amarillo desplazado detrás de la foto */
+.photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  transform: translate(16px, 16px); /* lo corre 16px abajo y a la derecha */
+  transition: transform 0.4s var(--ease);
+}
+.photo:hover::before { transform: translate(8px, 8px); } /* al pasar el mouse, se acerca */
+.photo img,
+.photo__placeholder {
+  position: relative;  /* para quedar por encima del marco */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   /* la foto llena el cuadro sin deformarse (recorta lo que sobre) */
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.photo__placeholder {
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 5rem;
+  font-weight: 700;
+  color: var(--accent);
+  border: 1px solid var(--border);
+}
+
+/* ===== SECCIONES (reglas comunes) ===== */
+.section { padding: clamp(4rem, 8vw, 7rem) 0; }  /* espacio arriba y abajo, fluido */
+.section--alt { background: var(--bg-alt); border-block: 1px solid var(--border); }
+
+.section__title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.4rem);
+  letter-spacing: -0.02em;
+  margin-bottom: 2.5rem;
+}
+.section__title .accent { font-family: var(--font-mono); font-size: 0.7em; }
+/* Línea fina a la derecha del título */
+.section__title::after {
+  content: "";
+  flex: 1;           /* ocupa el espacio sobrante */
+  max-width: 280px;
+  height: 1px;
+  background: var(--border);
+  margin-left: 0.75rem;
+}
+
+/* ===== SOBRE MÍ ===== */
+.about {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;  /* texto | datos */
+  gap: 3rem;
+  align-items: start;
+}
+.about__text p { color: var(--muted); }
+.about__text p + p { margin-top: 1rem; } /* "p + p" = un párrafo que va justo después de otro */
+.about__facts {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.counters {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columnas iguales */
+  gap: 1rem;
+  margin-top: 3rem;
+}
+.counter {
+  padding: 1.5rem;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.counter strong {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+  color: var(--accent);
+  line-height: 1.1;
+}
+.counter span { color: var(--muted); font-size: 0.9rem; }
+
+/* ===== FILTROS ===== */
+.filters { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 2rem; }
+
+/* ===== HABILIDADES ===== */
+.skills {
+  display: grid;
+  /* auto-fill + minmax: crea tantas columnas como quepan, cada una de MÍNIMO 260px.
+     Es responsive sin necesidad de media queries. */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+/* ===== PROYECTOS ===== */
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ===== LÍNEA DE TIEMPO ===== */
+.timeline {
+  position: relative;
+  max-width: 760px;
+  padding-left: 2rem;  /* espacio a la izquierda para la línea y los puntos */
+}
+/* La línea vertical gris */
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: var(--border);
+}
+
+/* ===== CONTACTO ===== */
+.contact {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 3rem;
+  align-items: start;
+}
+.contact__text { color: var(--muted); max-width: 42ch; }
+.socials { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+
+/* ===== FOOTER ===== */
+.footer {
+  padding: 2rem 0;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* ===== RESPONSIVE =====
+   @media aplica reglas SOLO cuando se cumple la condición.
+   max-width: 900px = "en pantallas de 900px o menos" (tablets y celulares). */
+@media (max-width: 900px) {
+  /* Pasamos de 2 columnas a 1: todo queda apilado */
+  .hero__inner,
+  .about,
+  .contact { grid-template-columns: 1fr; }
+
+  .hero__media { order: -1; justify-items: start; } /* la foto pasa arriba del texto */
+  .photo { width: min(220px, 60vw); }
+  .photo__placeholder { font-size: 3.5rem; }
+}
+
+/* En celulares (760px o menos) el menú se convierte en un panel desplegable */
+@media (max-width: 760px) {
+  .nav {
+    position: fixed;
+    inset: var(--nav-h) 0 auto 0;   /* justo debajo del navbar, de lado a lado */
+    flex-direction: column;         /* enlaces uno bajo otro */
+    padding: 1rem 1.25rem 1.5rem;
+    background: rgba(10, 10, 10, 0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    /* Estado cerrado: invisible, un poco arriba y sin recibir clics */
+    transform: translateY(-12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s var(--ease), opacity 0.3s;
+  }
+  /* La clase .open la agrega JS al tocar la hamburguesa */
+  .nav.open { transform: none; opacity: 1; pointer-events: auto; }
+  .nav__link { padding: 0.8rem 0; font-size: 1rem; }
+  .nav__link::after { left: 0; right: auto; width: 2rem; bottom: 0.4rem; }
+
+  .counters { grid-template-columns: 1fr; }
+}

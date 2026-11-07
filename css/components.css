@@ -1,0 +1,234 @@
+/* =====================================================================
+   components.css
+   Piezas reutilizables: botones, chips de filtro, barras de habilidad,
+   tarjetas, línea de tiempo, formulario y animación de aparición.
+   ===================================================================== */
+
+/* ===== BOTONES ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 8px;
+  border: 2px solid var(--accent);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s, background 0.2s, color 0.2s;
+}
+
+.card__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Variante 1: relleno amarillo con texto negro */
+.btn--primary { background: var(--accent); color: #000; }
+.btn--primary:hover {
+  transform: translateY(-3px);                          /* sube 3px */
+  box-shadow: 0 10px 30px -8px rgba(255, 212, 0, 0.55); /* resplandor amarillo debajo */
+}
+/* Variante 2: solo borde y texto amarillo */
+.btn--ghost { color: var(--accent); }
+.btn--ghost:hover { background: var(--accent-soft); transform: translateY(-3px); }
+
+/* ===== BOTÓN DE IDIOMA ===== */
+.lang-btn {
+  padding: 0.4rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+.lang-btn:hover { background: var(--accent); color: #000; } /* se rellena al pasar el mouse */
+
+/* ===== HAMBURGUESA ===== */
+.burger {
+  display: none;            /* oculta por defecto (en escritorio no se necesita) */
+  width: 40px;
+  height: 40px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.burger span {
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  transition: transform 0.3s var(--ease), opacity 0.2s;
+}
+/* Cuando el menú está abierto (aria-expanded="true", lo pone JS) las 3 rayas forman una X:
+   la de arriba baja y rota, la del medio desaparece, la de abajo sube y rota al otro lado. */
+.burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+/* Solo se muestra en celulares */
+@media (max-width: 760px) { .burger { display: flex; } }
+
+/* ===== CHIPS DE FILTRO (Todos / Frontend / Backend...) ===== */
+.chip {
+  padding: 0.45rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;   /* valor enorme = bordes totalmente redondos (forma de píldora) */
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.chip:hover { color: var(--text); border-color: #444; }
+.chip.active { color: #000; background: var(--accent); border-color: var(--accent); font-weight: 700; }
+
+/* ===== HABILIDAD (barra de progreso) ===== */
+.skill {
+  padding: 1.1rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.skill__head {
+  display: flex;
+  justify-content: space-between;  /* nombre a la izquierda, porcentaje a la derecha */
+  margin-bottom: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+.skill__level { color: var(--accent); }
+.skill__bar { height: 6px; background: #232323; border-radius: 99px; overflow: hidden; } /* el "riel" */
+.skill__fill {
+  height: 100%;
+  width: 0;                         /* empieza vacía */
+  background: var(--accent);
+  border-radius: 99px;
+  transition: width 1.1s var(--ease); /* al cambiar el ancho, se anima */
+}
+/* Cuando la tarjeta es visible (clase .visible puesta por JS), la barra se llena.
+   --level es una variable que JS define en cada barra (ej: 90%). */
+.skill.visible .skill__fill { width: var(--level); }
+
+/* ===== TARJETA DE PROYECTO ===== */
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;   /* la imagen superior respeta las esquinas redondeadas */
+  transition: transform 0.3s var(--ease), border-color 0.3s, box-shadow 0.3s;
+}
+.card:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent);
+  box-shadow: 0 18px 40px -20px rgba(255, 212, 0, 0.35);
+}
+/* Imagen de la tarjeta (por ahora un bloque con el número del proyecto) */
+.card__img {
+  aspect-ratio: 16 / 9;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--accent);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 212, 0, 0.18), transparent 60%),
+    #111;
+  border-bottom: 1px solid var(--border);
+}
+.card__body { display: flex; flex-direction: column; flex: 1; gap: 0.6rem; padding: 1.25rem; }
+.card__title { font-size: 1.15rem; letter-spacing: -0.01em; }
+.card__desc { color: var(--muted); font-size: 0.92rem; flex: 1; } /* flex:1 empuja las etiquetas hacia abajo */
+.card__tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.4rem; }
+.tag {
+  padding: 0.15rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 6px;
+}
+.card__links { display: flex; gap: 1rem; margin-top: 0.6rem; font-family: var(--font-mono); font-size: 0.82rem; }
+.card__links a { color: var(--text); border-bottom: 1px solid var(--accent); padding-bottom: 1px; transition: color 0.2s; }
+.card__links a:hover { color: var(--accent); }
+
+/* ===== LÍNEA DE TIEMPO ===== */
+.timeline__item { position: relative; padding-bottom: 2rem; }
+.timeline__item:last-child { padding-bottom: 0; }
+/* El circulito junto a cada hito (se coloca sobre la línea vertical) */
+.timeline__item::before {
+  content: "";
+  position: absolute;
+  left: -2rem;
+  top: 0.45rem;
+  width: 12px;
+  height: 12px;
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  border-radius: 50%;   /* 50% = círculo */
+}
+/* El hito actual: círculo relleno con un halo */
+.timeline__item.current::before { background: var(--accent); box-shadow: 0 0 0 6px var(--accent-soft); }
+.timeline__date { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); }
+.timeline__title { margin-top: 0.15rem; font-size: 1.1rem; }
+.timeline__place { color: var(--muted); font-size: 0.9rem; }
+.timeline__desc { margin-top: 0.4rem; color: var(--muted); font-size: 0.92rem; }
+
+/* ===== REDES SOCIALES ===== */
+.socials a {
+  display: inline-block;
+  padding: 0.55rem 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: color 0.2s, border-color 0.2s, transform 0.2s var(--ease);
+}
+.socials a:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-3px); }
+
+/* ===== FORMULARIO ===== */
+.form {
+  display: grid;
+  gap: 1.1rem;
+  padding: 1.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.form label > span { display: block; margin-bottom: 0.4rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); }
+.form input,
+.form textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  resize: vertical;   /* el textarea solo se puede estirar hacia abajo */
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+/* :focus = cuando el usuario hace clic dentro del campo */
+.form input:focus,
+.form textarea:focus {
+  outline: none;                                    /* quitamos el borde por defecto... */
+  border-color: var(--accent);                      /* ...y ponemos uno amarillo */
+  box-shadow: 0 0 0 3px var(--accent-soft);         /* con un halo suave */
+}
+.form .invalid { border-color: #ff5c5c; }  /* clase que JS agrega cuando hay error */
+.error { display: block; min-height: 1.1em; margin-top: 0.3rem; font-size: 0.78rem; color: #ff7b7b; }
+.form__status { font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); min-height: 1.2em; }
+
+/* ===== REVEAL: aparecer al hacer scroll =====
+   Los elementos con .reveal empiezan invisibles y 24px más abajo.
+   Cuando JS les agrega .visible (porque entraron en pantalla), suben y aparecen. */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.reveal.visible { opacity: 1; transform: none; }

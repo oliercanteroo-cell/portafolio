@@ -1,0 +1,239 @@
+ <!DOCTYPE html>
+ <html lang="es">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olier Cantero | Portafolio</title>
+
+    <!-- description que Google muestra en los resultados de búsqueda -->
+    <meta name="description" content="Portafolio de Olier Cantero, aprendiz de Análisis y Desarrollo de Software.">
+
+    <!--
+    Fuentes de Google Fonts:
+    - preconnect: avisa al navegador que pronto se conectará a Google para que sea más rápido.
+    - Inter: fuente para los textos normales.
+    - JetBrains Mono: fuente de "código", le da el estilo developer.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!--
+    Enlazamos nuestros 3 archivos CSS. EL ORDEN IMPORTA:
+    1. base.css       -> variables, reset y reglas generales
+    2. layout.css     -> la estructura (navbar, secciones, grids)
+    3. components.css -> piezas reutilizables (botones, tarjetas, formulario)
+    -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+ <body>
+    <header class="navbar" id="navbar">
+            <!-- .container centra el contenido y le pone un ancho máximo (definido en base.css) -->
+        <div class="container navbar__inner">
+
+                  <!-- Logo: &lt; y &gt; son los símbolos < y > escritos como "entidades" para que el navegador no los confunda con etiquetas -->
+            <a href="#inicio" class="logo">&lt;<span>OC<span>/&gt;</a>
+
+            <!--
+                <nav> = menú de navegación.
+                href="#inicio" es un "ancla": al hacer clic, baja hasta el elemento que tenga id="inicio".
+                data-i18n="nav.home": es una "etiqueta propia". Nuestro JavaScript (i18n.js) busca todos los
+                elementos con data-i18n y reemplaza su texto por la traducción de esa clave según el idioma.
+                El texto "Inicio" que está escrito aquí es el de respaldo (por si falla el JS).
+            -->
+            <nav class="nav" id="nav" aria-label="Principal">
+            <a href="#inicio" class="nav__link" data-i18n="nav.home">Inicio</a>
+            <a href="#sobre-mi" class="nav__link" data-i18n="nav.about">Sobre mí</a>
+            <a href="#habilidades" class="nav__link" data-i18n="nav.skills">Habilidades</a>
+            <a href="#proyectos" class="nav__link" data-i18n="nav.projects">Proyectos</a>
+            <a href="#formacion" class="nav__link" data-i18n="nav.education">Formación</a>
+            <a href="#contacto" class="nav__link" data-i18n="nav.contact">Contacto</a>
+            </nav>
+
+            <div class="navbar__actions">
+                <!-- Botón de idioma. aria-label describe el botón para lectores de pantalla. -->
+                <button class="lang-btn" id="langBtn" aria-label="Cambiar idioma / change language">
+                    <!-- data-lang-label: JS escribe aquí "EN" o "ES" según el idioma actual -->
+                    <span data-lang-label>EN</span>
+                </button>
+
+                <!--
+                Botón hamburguesa (solo se ve en celular, lo controla el CSS).
+                Las 3 <span> son las 3 rayitas.
+                aria-expanded="false" avisa a lectores de pantalla si el menú está abierto o cerrado.
+                -->
+
+                <button class="burger" id="burger" aria-label="Menú" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+      <!-- <main> contiene el contenido principal (cada <section> es una parte de la página) -->
+    <main>
+
+    <!-- ==================== HERO (la portada) ==================== -->
+    <!-- id="inicio" es el destino del enlace "#inicio" del menú -->
+        <section class="hero" id="inicio">
+            <div class="container hero__inner">
+
+                <div class="hero__text">
+                    <p class ="hero__tag">&gt;_ <span data-i18n="hero.hello">hola, soy</span></p>
+                    
+                    <!-- <h1> es el título principal. Solo debe haber UNO por página (es bueno para SEO). -->
+                    <h1 class="hero__name">Olier Esteban <span class="accent"> Cantero Orozco</span></h1>
+
+                    <!-- Este texto lo escribe el efecto "máquina de escribir" desde main.js -->
+                    <p class="hero__role" data-i18n="hero.role">Aprendiz de Análisis y Desarrollo de Software</p>
+                    <p class="hero__desc" data-i18n="hero.desc">Construyo aplicaciones web con HTML, CSS y JavaScript, y estoy creciendo en backend con PHP, Python y Java.</p>
+
+                    <div class="hero__cta">
+                        <!-- btn--primary: botón amarillo relleno. btn--ghost: botón solo con borde -->
+                        <a href="#proyectos" class="btn btn--primary" data-i18n="hero.cta1">Ver proyectos</a>
+                        <!-- El atributo "download" hace que el navegador descargue el archivo en vez de abrirlo -->
+                         <a href="assets/cv.pdf" class="btn btn--ghost" download data-i18n="hero.cta2">Descargar CV</a>
+                    </div>
+                </div>
+
+                <!-- Columna derecha: foto -->
+                <div class="hero__media">
+                    <div class="photo">
+                    <!-- Cuando tengas tu foto, borra el div de abajo y usa:
+                    <img src="assets/img/foto.jpg" alt="Foto de Olier">
+                    (alt describe la imagen para accesibilidad y por si no carga) -->
+                        <div class="photo__placeholder">OC</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+            <!-- ==================== SOBRE MÍ ==================== -->
+             <section class="section" id="sobre-mi">
+                <div class="container">
+                    <!-- <h2> = título de sección. El <span class="accent"> pinta el número de amarillo. -->
+                    <h2 class="section__title"><span class="accent">01.</span> <span data-i18n="about.title">Sobre mí</span></h2>
+
+                    <div class="about">
+                        <div class="about__text">
+                            <p data-i18n="about.p1">Soy aprendiz del SENA en el tecnólogop en Análisis y Desarrollo de Software, en Medellín. Soy muy autodidata, me encanta aprender tantas gias como pueda.</p>
+                            <p data-i18n="about.p2">Vengo de un bachillerato técnico en Integración de Contenidos Digitales, así que le presto mucha atención al diseño y a los detalles.</p>
+                        </div>
+
+                        <ul class="about__facts">
+                            <li><span class="accent">&gt;</span> <span data-i18n="about.f1">Medellín, Colombia</span></li>
+                            <li><span class="accent">&gt;</span> <span data-i18n="about.f2">Tecnólogo ADSO, SENA</span></li>
+                            <li><span class="accent">&gt;</span> <span data-i18n="about.f3">Busco empresa patrocinadora</span></li>
+                        </ul>
+                    </div>
+
+                    <!--
+                    Contadores. data-count="6" guarda el número final.
+                    Empiezan en 0 y JavaScript los hace subir hasta ese valor cuando aparecen en pantalla.
+                    -->
+                    <div class="counters" id="counters">
+                        <div class="counter"><strong data-count="2">0</strong><span data-i18n="about.c1">Proyectos</span></div>
+                        <div class="counter"><strong data-count="8">0</strong><span data-i18n="about.c2">Tecnologías</span></div>
+                        <div class="counter"><strong data-count="1">0</strong><span data-i18n="about.c3">Idiomas</span></div>
+                    </div>
+                </div>
+             </section>
+
+            <!-- ==================== HABILIDADES ==================== -->
+            <!-- section--alt: fondo un poco distinto para separar visualmente las secciones -->
+             <section class="section section--alt" id="habilidades">
+                <div class="container">
+                    <h2 class="section__title"><span class="accent">02.</span> <span data-i18n="skills.title">Habilidades</span></h2>
+                    <!-- Estos dos contenedores están VACÍOS a propósito: main.js los llena con datos de data.js -->
+                    <div class="filters" id="skillFilters"></div>
+                    <div class="skills" id="skillsGrid"></div>
+                </div>
+             </section>
+
+                 <!-- ==================== PROYECTOS ==================== -->
+            <section class="section" id="proyectos">
+                <div class="container">
+                    <h2 class="section__title"><span class="accent">03.</span> <span data-i18n="projects.title">Proyectos</span></h2>
+                    <!-- También vacíos: las tarjetas se generan con JavaScript -->
+                    <div class="filters" id="projectFilters"></div>
+                    <div class="projects" id="projectsGrid"></div>
+                </div>
+            </section>
+
+             <!-- ==================== FORMACIÓN ==================== -->
+            <section class="section section--alt" id="formacion">
+                <div class="container">
+                    <h2 class="section__title"><span class="accent">04.</span> <span data-i18n="edu.title">Formación</span></h2>
+                    <!-- <ol> = lista ordenada (cronológica). Se llena desde JavaScript. -->
+                    <ol class="timeline" id="timeline"></ol>
+                </div>
+            </section>
+
+            <!-- ==================== CONTACTO ==================== -->
+            <section class="section" id="contacto">
+                <div class="container contact">
+                    <div>
+                        <h2 class="section__title"><span class="accent">05.</span> <span data-i18n="contact.title">Contacto</span></h2>
+                        <p class="contact__text" data-i18n="contact.text">¿Tiene un proyecto o una oportunidad? Escribeme, me encantaría conversar.</p>
+
+                        <ul class="socials">
+                            <li><a href="https://github.com/oliercanteroo-cell" target="_blank" rel="noopener">GitHub</a></li>
+                            <li><a href="https://www.linkedin.com/in/olier-cantero-340735448/" target="_blank" rel="noopener">LinkedIn</a></li>
+                            <li><a href="mailto:oliercanteroo@gmail.com">Email</a></li>
+                        </ul>
+                    </div>
+
+                <!--
+                Formulario.
+                novalidate: desactiva la validación automática del navegador, porque
+                usare la mia (con JavaScript) para controlar los mensajes y que salgan en ES/EN.
+                -->
+                <form class="form" id="contactForm" novalidate>
+                <!-- <label> asocia el texto con su campo: al hacer clic en el texto, se activa el campo -->
+                <label>
+                    <span data-i18n="contact.name">Nombre</span>
+                    <input type="text" name="name" required>
+                    <!-- <small class="error">: aquí JS escribe el mensaje de error -->
+                    <small class="error"></small>
+                </label>
+                <label>
+                    <span data-i18n="contact.email">Correo</span>
+                    <!-- type="email" muestra el teclado con @ en el celular -->
+                     <input type="email" name="email" required>
+                     <small class="error"></small>
+                </label>
+                <label>
+                    <span data-i18n="contact.msg">Mensaje</span>
+                    <textarea name="message" rows="5" requird></textarea>
+                    <small class="error"></small>
+                </label>
+                <button type="submit" class="btn btn--primary" data-i18n="contact.send">Enviar mensaje</button>
+                </form>
+            </div>
+        </section>
+        
+    </main>
+    
+    <!-- ==================== FOOTER ==================== -->
+     <footer class="footer">
+        <div class="container footer__inner">
+
+            <!-- &copy; es el símbolo ©. El año lo escribe JS en <span id="year"> -->
+            <p>&copy; <span id="year"></span> Olier Cantero <span data-i18n="footer.rights">Todos los derechos reservados.</span></p>
+        </div>
+     </footer>
+
+     <!--
+        Scripts al FINAL del body para que el HTML ya exista cuando JS lo busque.
+        EL ORDEN IMPORTA, cada archivo usa lo del anterior:
+        1. data.js  -> tus datos (habilidades, proyectos, formación)
+        2. i18n.js  -> traducciones y función para cambiar idioma
+        3. main.js  -> toda la lógica (usa lo de los dos anteriores)
+    -->
+    <script src="js/data.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/main.js"></script>
+ </body>
+ </html>
